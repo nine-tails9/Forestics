@@ -1,15 +1,21 @@
 var app = new Vue({
   el: '#app',
   data: {
-    message: 'Hello Vue!'
+    message: 'Hello Vue!',
+    lat: '',
+    lng: '',
+    images: []
+  },
+  methods: {
+    addLocation(){
+      fetch('http://127.0.0.1:5000/addnew?lat=' + this.lat + '&lng=' + this.lng);
+      this.lat = '';
+      this.lng = '';
+
+    }
   },
   async created(){
-    let url = "https://api.mapbox.com/styles/v1/mapbox/satellite-v9/static/93.1673,26.5889,15/800x600?access_token=pk.eyJ1IjoibmluZS10YWlsczkiLCJhIjoiY2szYnVkN200MHB0MDNwczEzdnpzdXUwZSJ9.y_Kl7N0k9MjGx6HI1YNITw"
-    fetch(url)
-  .then(res=>{return res.blob()})
-  .then(blob=>{
-    var img = URL.createObjectURL(blob);
-      document.getElementById('img').setAttribute('src', img);
-  })
+    let res = await fetch('http://127.0.0.1:5000/getpaths');
+    this.images = await res.json();
   }
 })
