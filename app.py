@@ -16,7 +16,7 @@ CORS(app)
 
 # Initialized Mongo
 app.config['MONGO_DBNAME'] = 'forestics'
-app.config["MONGO_URI"] = "mongodb://root:grofers16@ds033831.mlab.com:33831/forestics"
+app.config["MONGO_URI"] = "mongodb://root:grofers16@ds033831.mlab.com:33831/forestics?retryWrites=false"
 mongo = PyMongo(app)
 
 
