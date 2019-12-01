@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, render_template
 import requests
 from flask_cors import CORS
 import json
@@ -33,19 +33,18 @@ cron = Scheduler(daemon=True)
 
 
 def updateData(lat, lng, location):
-    print(lat, lng)
     name = lat + lng
     URL = 'https://api.mapbox.com/styles/v1/mapbox/satellite-v9/static/' + lng + ',' + lat + ',15/800x600?access_token=pk.eyJ1IjoibmluZS10YWlsczkiLCJhIjoiY2szYnVkN200MHB0MDNwczEzdnpzdXUwZSJ9.y_Kl7N0k9MjGx6HI1YNITw'
     r = requests.get(url = URL, stream =True)
     if r.status_code == 200:
-        with open("/code/dev/forestics/Images/" + name + '.png', 'wb') as f:
+        with open("/code/dev/forestics/static/Images/" + name + '.png', 'wb') as f:
             f.write(r.content)
-    findAcc('/code/dev/forestics/Images/' + name + '.png', name)
+    findAcc('/code/dev/forestics/static/Images/' + name + '.png', name)
     mongo.db.images.insert({'path': name, 'name': location})
 
 @app.route('/')
 def hello_world():
-    return 'Hello, Dear!'
+    return render_template('index.html')
 
 @app.route('/getpaths', methods=['GET'])
 def getpaths():
@@ -62,5 +61,3 @@ def addnew():
     coords.append(coord)
     updateData(coord[0], coord[1], request.args.get('name'))
     return '200'
-    
- 
