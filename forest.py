@@ -9,7 +9,6 @@ def findAcc(path, nam):
 	hsv_img = cv.cvtColor(img, cv.COLOR_BGR2HSV)
 
 	mask = cv.inRange(hsv_img, low_green, high_green)
-
 	res = cv.bitwise_and(img, img, mask = mask)
 	# cv.imwrite(nam + " Mask.png", mask)
 

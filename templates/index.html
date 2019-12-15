@@ -37,7 +37,7 @@
       </div>
       </div>
         <button class="btn btn-success" @click="addLocation">Add Locations</button>    
-
+      <div class="alert alert-success m-2" v-if="success">Location added successfully</div>
         <div class="card m-2 p-2 shadow-sm"  v-for="path in images">
           <div class="card-body">
             <h5>[[ path[1] ]]</h5>

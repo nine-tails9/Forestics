@@ -6,7 +6,9 @@ var app = new Vue({
     lat: '',
     lng: '',
     images: [],
-    name: ''
+    name: '',
+    success: false
+
   },
   methods: {
     addLocation(){
@@ -15,6 +17,7 @@ var app = new Vue({
       this.lat = '';
       this.lng = '';
       this.name = '';
+      this.success = true;
 
     }
   },

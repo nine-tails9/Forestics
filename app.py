@@ -26,11 +26,11 @@ coords = []
 # Initialized scheduler
 cron = Scheduler(daemon=True)
 # Explicitly kick off the background thread
-# cron.start()
-# @cron.interval_schedule(seconds=20)
-# def job_function():
-#     for lat, lng in coords:
-#         updateData(lat, lng)
+cron.start()
+@cron.interval_schedule(seconds=20)
+def job_function():
+    for lat, lng, name in coords:
+        updateData(lat, lng, name)
 
 
 def updateData(lat, lng, location):
@@ -41,7 +41,8 @@ def updateData(lat, lng, location):
         with open("/code/dev/forestics/static/Images/" + name + '.png', 'wb') as f:
             f.write(r.content)
     findAcc('/code/dev/forestics/static/Images/' + name + '.png', name)
-    mongo.db.images.insert({'path': name, 'name': location})
+    if mongo.db.images.find({'lat': lat, 'lng': lng}).count() == 0:
+        mongo.db.images.insert({'path': name, 'name': location, 'lat': lat, 'lng': lng})
 
 @app.route('/')
 def hello_world():
@@ -53,12 +54,13 @@ def getpaths():
     results = []
     for res in paths:
         results.append([res['path'], res['name']])
+        coords.append((res['lat'], res['lng'], res['name']))
     return json.dumps(results)
     
  
 @app.route('/addnew', methods=['GET'])
 def addnew():
-    coord = (request.args.get('lat'), request.args.get('lng'))
+    coord = (request.args.get('lat'), request.args.get('lng'), request.args.get('name'))
     coords.append(coord)
     updateData(coord[0], coord[1], request.args.get('name'))
     return '200'
